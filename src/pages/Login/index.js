@@ -1,11 +1,23 @@
 import React from 'react';
-import {Button, Card, Form, Input} from 'antd';
+import {Button, Card, Form, Input, message} from 'antd';
 import logo from '@/assets/logo.png'
 import './index.scss'
+import {fetchLogin} from "@/store/modules/user";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
-    const onFinish = (values) =>{
-        console.log(values)
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    // 添加async 异步发送防止执行异步方法中token数据不一致导致错误
+    const onFinish = async (values) =>{
+        // 触发异步登录方法
+        await dispatch(fetchLogin(values))
+        // 1.跳转页面 跳转到首页
+        navigate("/")
+        // 2. 提醒用户登录成功
+        message.success("登陆成功")
+
     }
     return (
         <div className="login">
