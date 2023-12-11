@@ -6,12 +6,15 @@ const userStore = createSlice({
     name: "user",
     // 数据状态
     initialState: {
-        token: ''
+        // 先从本地localStorage中取,如果没有再置为空
+        token: localStorage.getItem("token_key") || ''
     },
     // 同步修改方法
     reducers: {
         setToken(state, action) {
             state.token = action.payload
+            // 存入localStorage存一份
+            localStorage.setItem("token_key",action.payload)
         }
     }
 })
