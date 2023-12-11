@@ -1,20 +1,20 @@
 // 用户相关持久化存储的信息 使用状态管理
 import {createSlice} from "@reduxjs/toolkit";
-import {request} from "@/utils";
+import {getToken,setToken as _setToken, request} from "@/utils";
 
 const userStore = createSlice({
     name: "user",
     // 数据状态
     initialState: {
         // 先从本地localStorage中取,如果没有再置为空
-        token: localStorage.getItem("token_key") || ''
+        token: getToken() || ''
     },
     // 同步修改方法
     reducers: {
         setToken(state, action) {
             state.token = action.payload
             // 存入localStorage存一份
-            localStorage.setItem("token_key",action.payload)
+            _setToken(action.payload)
         }
     }
 })
