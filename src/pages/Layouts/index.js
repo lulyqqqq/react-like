@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import {Layout, Menu, Button, theme, Popconfirm} from 'antd';
 import "./index.scss"
+import {Outlet} from "react-router-dom";
 
 const {Header, Sider, Content} = Layout;
 const Layouts = () => {
@@ -74,7 +75,7 @@ const Layouts = () => {
                     </div>
                 </Header>
 
-                <Layout className="layout-content" style={{padding:20}}>
+                <Layout className="layout-content" style={{padding: 20}}>
                     <Content
                         style={{
                             margin: '24px 16px',
@@ -83,7 +84,8 @@ const Layouts = () => {
                             background: colorBgContainer,
                         }}
                     >
-                        Content
+                        {/*二级路由出口*/}
+                        <Outlet/>
                     </Content>
                 </Layout>
 

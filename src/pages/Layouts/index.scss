@@ -13,7 +13,9 @@
 
 .user-info {
   width: 100%;
+  // 设置div为flex布局
   display: flex;
+  // CSS justify-content 属性定义浏览器如何沿着弹性容器的主轴和网格容器的行向轴分配内容元素之间和周围的空间。
   justify-content: space-between;
 
 
