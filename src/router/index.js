@@ -1,16 +1,10 @@
 // 路由配置
-import Layouts from "../pages/Layouts";
-import Login from "../pages/Login";
+import Layouts from "@/pages/Layouts";
+import Login from "@/pages/Login";
 
 // 配置路由实例
 import * as React from "react";
-import {createRoot} from "react-dom/client";
-import {
-    createBrowserRouter,
-    RouterProvider,
-    Route,
-    Link,
-} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 
 const router = createBrowserRouter([
     {
