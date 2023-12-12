@@ -15,6 +15,7 @@ export function getChannelApi() {
 // 2. 提交表单
 export function createArticleApi(data) {
     return request({
+        // draft=false:不是草稿
         url: '/mp/articles?draft=false',
         method: 'POST',
         data
