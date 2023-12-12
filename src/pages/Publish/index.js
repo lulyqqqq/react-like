@@ -32,24 +32,30 @@ const Publish = () => {
     }, []);
 
     //提交表单事项
-    const onFinish = (formValue)=>{
-        const {title,content,channel_id} = formValue
+    const onFinish = (formValue) => {
+        const {title, content, channel_id} = formValue
         // 获取表单数据
         console.log(formValue)
         // 1.处理表单数据
         // 1.1 表单对象
-        const reqData={
+        const reqData = {
             title,
             content,
-            cover:{
-                type:0,
-                images:[],
+            cover: {
+                type: 0,
+                images: [],
             },
             channel_id
         }
 
         // 2.调用接口
         createArticleApi(reqData)
+    }
+
+    const [imageList, setImageList] = useState([])
+    const onUploadChange = (value)=>{
+        console.log('正常上传中')
+        setImageList(value.fileList)
     }
     return (
         <div>
@@ -82,6 +88,30 @@ const Publish = () => {
                         <Select placeholder="请选择文章频道" style={{width: 400}}>
                             {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                         </Select>
+                    </Form.Item>
+                    <Form.Item label="封面">
+                        <Form.Item name="type">
+                            <Radio.Group>
+                                <Radio value={1}>单图</Radio>
+                                <Radio value={3}>三图</Radio>
+                                <Radio value={0}>无图</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        {/*
+                            1. listType:决定选择文件框的外观样式
+                            2. showUploadList:控制显示上传列表
+                        */}
+                        <Upload
+                            listType="picture-card"
+                            showUploadList
+                            name="image"
+                            action={'http://geek.itheima.net/v1_0/upload'}
+                            onChange={onUploadChange}
+                        >
+                            <div style={{marginTop: 8}}>
+                                <PlusOutlined/>
+                            </div>
+                        </Upload>
                     </Form.Item>
                     <Form.Item
                         label="内容"
