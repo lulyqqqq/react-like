@@ -14,8 +14,27 @@ import 'react-quill/dist/quill.snow.css'
 import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
 import './index.scss'
-const { Option } = Select
+import {useEffect, useState} from "react";
+import {getChannelApi} from "@/apis/articel";
+
+const {Option} = Select
 const Publish = () => {
+    // 获取频道列表
+    const [channelList, setChannelList] = useState([])
+    useEffect(() => {
+        // 1. 封装函数 在函数体内进行调用接口
+        const getChannelList = async () => {
+            const res = await getChannelApi()
+            setChannelList(res.data.channels)
+        }
+        // 2.调用函数
+        getChannelList()
+    }, []);
+
+    //提交表单事项
+    const onFinish = ()=>{
+        // 获取表单数据
+    }
     return (
         <div>
             <Card
@@ -30,6 +49,7 @@ const Publish = () => {
                     labelCol={{span: 4}}
                     wrapperCol={{span: 16}}
                     initialValues={{type: 1}}
+                    onFinish={onFinish}
                 >
                     <Form.Item
                         label="标题"
@@ -44,7 +64,7 @@ const Publish = () => {
                         rules={[{required: true, message: '请选择文章频道'}]}
                     >
                         <Select placeholder="请选择文章频道" style={{width: 400}}>
-                            <Option value={0}>推荐</Option>
+                            {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                         </Select>
                     </Form.Item>
                     <Form.Item
@@ -52,7 +72,7 @@ const Publish = () => {
                         name="content"
                         rules={[{required: true, message: '请输入文章内容'}]}
                     >
-                    {/* 富文本编辑框   */}
+                        {/* 富文本编辑框   */}
                         <ReactQuill
                             className="publish-quill"
                             theme="snow"
