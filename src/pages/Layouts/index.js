@@ -10,7 +10,7 @@ import {Layout, Menu, Button, theme, Popconfirm} from 'antd';
 import "./index.scss"
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchUserInfo} from "@/store/modules/user";
+import {clearUserInfo, fetchUserInfo} from "@/store/modules/user";
 
 const {Header, Sider, Content} = Layout;
 const Layouts = () => {
@@ -55,6 +55,15 @@ const Layouts = () => {
 
     // 使用useSelector获取store中的数据
     const userInfo = useSelector(state => state.user.userInfo)
+
+    // 退出登录框 确认事件
+    const onConfirm = () =>{
+        console.log("确认退出")
+        // 清除用户信息
+        dispatch(clearUserInfo())
+        // 跳转登录页
+        navigate("/login")
+    }
     return (
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -89,7 +98,7 @@ const Layouts = () => {
                         <div className="span">
                             <span className="user-name">{userInfo.name}</span>
                             <span className="user-logout">
-                                <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+                                <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={onConfirm}>
                                     <LogoutOutlined/> 退出
                                 </Popconfirm>
                             </span>

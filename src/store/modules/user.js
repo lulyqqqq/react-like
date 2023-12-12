@@ -1,6 +1,6 @@
 // 用户相关持久化存储的信息 使用状态管理
 import {createSlice} from "@reduxjs/toolkit";
-import {getToken, setToken as _setToken, request} from "@/utils";
+import {getToken, setToken as _setToken, request, removeToken} from "@/utils";
 
 const userStore = createSlice({
     name: "user",
@@ -19,12 +19,19 @@ const userStore = createSlice({
         },
         setUserInfo(state, action) {
             state.userInfo = action.payload
+        },
+        // 清除用户信息
+        clearUserInfo(state) {
+            state.token = ''
+            state.userInfo = {}
+            // 清除本地token记录
+            removeToken()
         }
     }
 })
 
 // 解构出actionCreater
-const {setToken, setUserInfo} = userStore.actions
+const {setToken, setUserInfo,clearUserInfo} = userStore.actions
 // 获取reducer函数
 const userReducer = userStore.reducer;
 
@@ -48,7 +55,7 @@ const fetchUserInfo = () => {
 }
 
 
-export {setToken, fetchLogin, fetchUserInfo}
+export {setToken, fetchLogin, fetchUserInfo,clearUserInfo}
 
 export default userReducer
 
