@@ -15,7 +15,7 @@ import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
 import './index.scss'
 import {useEffect, useState} from "react";
-import {getChannelApi} from "@/apis/articel";
+import {createArticleApi, getChannelApi} from "@/apis/articel";
 
 const {Option} = Select
 const Publish = () => {
@@ -32,8 +32,24 @@ const Publish = () => {
     }, []);
 
     //提交表单事项
-    const onFinish = ()=>{
+    const onFinish = (formValue)=>{
+        const {title,content,channel_id} = formValue
         // 获取表单数据
+        console.log(formValue)
+        // 1.处理表单数据
+        // 1.1 表单对象
+        const reqData={
+            title,
+            content,
+            cover:{
+                type:0,
+                images:[],
+            },
+            channel_id
+        }
+
+        // 2.调用接口
+        createArticleApi(reqData)
     }
     return (
         <div>
