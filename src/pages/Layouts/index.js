@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     DiffOutlined, EditOutlined,
     HomeOutlined, LogoutOutlined,
@@ -9,6 +9,8 @@ import {
 import {Layout, Menu, Button, theme, Popconfirm} from 'antd';
 import "./index.scss"
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchUserInfo} from "@/store/modules/user";
 
 const {Header, Sider, Content} = Layout;
 const Layouts = () => {
@@ -44,6 +46,15 @@ const Layouts = () => {
     // 获得当前路径
     const location = useLocation();
     const selectedKeys = location.pathname
+
+    const dispatch = useDispatch();
+    // 触发个人用户信息
+    useEffect(() => {
+        dispatch(fetchUserInfo())
+    }, [dispatch]);
+
+    // 使用useSelector获取store中的数据
+    const userInfo = useSelector(state => state.user.userInfo)
     return (
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -76,7 +87,7 @@ const Layouts = () => {
                                 }}
                         />
                         <div className="span">
-                            <span className="user-name">02</span>
+                            <span className="user-name">{userInfo.name}</span>
                             <span className="user-logout">
                                 <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
                                     <LogoutOutlined/> 退出

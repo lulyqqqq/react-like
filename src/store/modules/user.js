@@ -1,13 +1,14 @@
 // 用户相关持久化存储的信息 使用状态管理
 import {createSlice} from "@reduxjs/toolkit";
-import {getToken,setToken as _setToken, request} from "@/utils";
+import {getToken, setToken as _setToken, request} from "@/utils";
 
 const userStore = createSlice({
     name: "user",
     // 数据状态
     initialState: {
         // 先从本地localStorage中取,如果没有再置为空
-        token: getToken() || ''
+        token: getToken() || '',
+        userInfo: {}
     },
     // 同步修改方法
     reducers: {
@@ -15,12 +16,15 @@ const userStore = createSlice({
             state.token = action.payload
             // 存入localStorage存一份
             _setToken(action.payload)
+        },
+        setUserInfo(state, action) {
+            state.userInfo = action.payload
         }
     }
 })
 
 // 解构出actionCreater
-const {setToken} = userStore.actions
+const {setToken, setUserInfo} = userStore.actions
 // 获取reducer函数
 const userReducer = userStore.reducer;
 
@@ -34,8 +38,17 @@ const fetchLogin = (loginForm) => {
     }
 }
 
+// 获取个人信息异步方法
+const fetchUserInfo = () => {
+    return async (dispatch) => {
+        // 1.发送异步请求
+        const res = await request.get('/user/profile')
+        dispatch(setUserInfo(res.data))
+    }
+}
 
-export {setToken, fetchLogin}
+
+export {setToken, fetchLogin, fetchUserInfo}
 
 export default userReducer
 
