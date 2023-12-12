@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Card, Form, Input, message} from 'antd';
-import logo from '@/assets/logo.png'
+import logo from '@/assets/02.png'
 import './index.scss'
 import {fetchLogin} from "@/store/modules/user";
 import {useDispatch} from "react-redux";

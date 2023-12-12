@@ -8,32 +8,42 @@ import {
 } from '@ant-design/icons';
 import {Layout, Menu, Button, theme, Popconfirm} from 'antd';
 import "./index.scss"
-import {Outlet} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 
 const {Header, Sider, Content} = Layout;
 const Layouts = () => {
+    const items = [
+        {
+            label: '首页',
+            key: '/',
+            icon: <HomeOutlined/>,
+        },
+        {
+            label: '文章管理',
+            key: '/article',
+            icon: <DiffOutlined/>,
+        },
+        {
+            label: '创建文章',
+            key: '/publish',
+            icon: <EditOutlined/>,
+        },
+    ]
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: {colorBgContainer},
     } = theme.useToken();
 
-    const items = [
-        {
-            label: '首页',
-            key: '1',
-            icon: <HomeOutlined/>,
-        },
-        {
-            label: '文章管理',
-            key: '2',
-            icon: <DiffOutlined/>,
-        },
-        {
-            label: '创建文章',
-            key: '3',
-            icon: <EditOutlined/>,
-        },
-    ]
+    const navigate = useNavigate();
+    const onMenuClick = (route) => {
+        console.log("菜单被点击了", route)
+        const path = route.key
+        // 跳转页面
+        navigate(path)
+    }
+    // 获得当前路径
+    const location = useLocation();
+    const selectedKeys = location.pathname
     return (
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -41,7 +51,8 @@ const Layouts = () => {
                 <Menu
                     theme="dark"
                     mode="inline"
-                    defaultSelectedKeys={['1']}
+                    selectedKeys={selectedKeys}
+                    onClick={onMenuClick}
                     items={items}
                 />
             </Sider>

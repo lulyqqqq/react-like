@@ -15,8 +15,10 @@ const router = createBrowserRouter([
         element: <AuthRoute> <Layouts/> </AuthRoute>,
         children: [
             {
-                path: 'home',
+                index: true,
+                // path:'home',
                 element: <Home/>
+
             },
             {
                 path: 'article',
