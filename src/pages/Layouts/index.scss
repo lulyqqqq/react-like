@@ -20,18 +20,16 @@
 
 
   .span{
-    margin-right: 30px;
+    margin-right: 50px;
   }
 
   .user-name {
     margin-right: 20px;
-    text-align: left;
   }
 
   .user-logout {
-    //display: inline-block;
+    display: inline-block;
     cursor: pointer;
-    text-align: right;
   }
 }
 .ant-layout-header {
