@@ -6,9 +6,9 @@
   padding: 0;
 }
 
-
+// 控制页面超出长度之后使用滚动条
 .layout-content {
-  overflow-y: auto;
+  overflow: auto;
 }
 
 .user-info {
@@ -32,6 +32,12 @@
     cursor: pointer;
   }
 }
+
+.content-wrapper {
+  height: 100%;
+  overflow: auto;
+}
+
 .ant-layout-header {
   padding: 0 !important;
 }

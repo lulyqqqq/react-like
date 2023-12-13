@@ -106,17 +106,20 @@ const Layouts = () => {
                     </div>
                 </Header>
 
-                <Layout className="layout-content" style={{padding: 20}}>
+                <Layout className="layout-content" style={{padding: 5}}>
                     <Content
                         style={{
-                            margin: '24px 16px',
+                            margin: '24px 16px 0',
                             padding: 24,
                             minHeight: 280,
                             background: colorBgContainer,
                         }}
                     >
-                        {/*二级路由出口*/}
-                        <Outlet/>
+                        {/* 二级路由出口 */}
+                        <div className="content-wrapper">
+                            <Outlet />
+                        </div>
+
                     </Content>
                 </Layout>
 
