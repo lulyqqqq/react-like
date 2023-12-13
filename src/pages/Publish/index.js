@@ -14,22 +14,14 @@ import 'react-quill/dist/quill.snow.css'
 import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
 import './index.scss'
-import {useEffect, useState} from "react";
-import {createArticleApi, getChannelApi} from "@/apis/articel";
+import {useState} from "react";
+import {createArticleApi} from "@/apis/articel";
+import {useChannel} from "@/hooks/useChannel";
 
 const {Option} = Select
 const Publish = () => {
     // 获取频道列表
-    const [channelList, setChannelList] = useState([])
-    useEffect(() => {
-        // 1. 封装函数 在函数体内进行调用接口
-        const getChannelList = async () => {
-            const res = await getChannelApi()
-            setChannelList(res.data.channels)
-        }
-        // 2.调用函数
-        getChannelList()
-    }, []);
+    const {channelList} = useChannel()
 
     //提交表单事项
     const onFinish = (formValue) => {
