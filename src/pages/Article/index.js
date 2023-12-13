@@ -4,6 +4,8 @@ import locale from 'antd/es/date-picker/locale/zh_CN'
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import {useChannel} from "@/hooks/useChannel";
+import {useEffect, useState} from "react";
+import {getArticleListApi} from "@/apis/articel";
 
 const {Option} = Select
 const {RangePicker} = DatePicker
@@ -80,6 +82,17 @@ const Article = () => {
             title: 'wkwebview离线化加载h5资源解决方案'
         }
     ]
+
+    // 获取文章列表
+    const [list, setList] = useState([])
+    useEffect(() => {
+        async function getList(){
+            const res = await getArticleListApi()
+            setList(res.data.results)
+        }
+        getList()
+    }, []);
+
     return (
         <div>
             <Card
@@ -121,8 +134,8 @@ const Article = () => {
             </Card>
 
             {/*表格筛选区域*/}
-            <Card style={{marginTop: 10}} title={`根据筛选条件查询到 count 条数据`}>
-                <Table rowKey="id" columns={columns} dataSource={data}/>
+            <Card style={{marginTop: 10}} title={`根据筛选条件查询到 ${list.length} 条数据`}>
+                <Table rowKey="id" columns={columns} dataSource={list}/>
             </Card>
 
         </div>
