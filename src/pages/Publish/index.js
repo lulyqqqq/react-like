@@ -36,6 +36,7 @@ const Publish = () => {
         if (imageList.length !== imageType){
             return message.error("封面类型和图片数量不匹配")
         }
+        console.log(imageList)
         const {title, content, channel_id} = formValue
         // 获取表单数据
         console.log(formValue)
@@ -57,7 +58,7 @@ const Publish = () => {
 
     const [imageList, setImageList] = useState([])
     const onUploadChange = (value) => {
-        console.log('正常上传中')
+        console.log('正常上传中',value)
         setImageList(value.fileList)
     }
     // 切换封面类型
@@ -116,6 +117,7 @@ const Publish = () => {
                         */}
                         {imageType > 0 &&
                             <Upload
+
                                 listType="picture-card"
                                 showUploadList
                                 name="image"
@@ -123,7 +125,7 @@ const Publish = () => {
                                 onChange={onUploadChange}
                                 maxCount={imageType}
                             >
-                                <div style={{marginTop: 8}}>
+                                <div style={{marginTop: 4}}>
                                     <PlusOutlined/>
                                 </div>
                             </Upload>
