@@ -1,6 +1,6 @@
 // 用户相关持久化存储的信息 使用状态管理
 import {createSlice} from "@reduxjs/toolkit";
-import {getToken, setToken as _setToken, request, removeToken} from "@/utils";
+import {getToken, setToken as _setToken, removeToken} from "@/utils";
 import {getProfileApi, loginApi} from "@/apis/user";
 
 const userStore = createSlice({

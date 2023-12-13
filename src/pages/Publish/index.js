@@ -7,7 +7,7 @@ import {
     Input,
     Upload,
     Space,
-    Select
+    Select, message
 } from 'antd'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -33,6 +33,9 @@ const Publish = () => {
 
     //提交表单事项
     const onFinish = (formValue) => {
+        if (imageList.length !== imageType){
+            return message.error("封面类型和图片数量不匹配")
+        }
         const {title, content, channel_id} = formValue
         // 获取表单数据
         console.log(formValue)
@@ -42,8 +45,8 @@ const Publish = () => {
             title,
             content,
             cover: {
-                type: 0,
-                images: [],
+                type: imageType, // 封面模式
+                images: imageList.map(item => item.response.data.url),  // 封面列表
             },
             channel_id
         }
@@ -118,6 +121,7 @@ const Publish = () => {
                                 name="image"
                                 action={'http://geek.itheima.net/v1_0/upload'}
                                 onChange={onUploadChange}
+                                maxCount={imageType}
                             >
                                 <div style={{marginTop: 8}}>
                                     <PlusOutlined/>

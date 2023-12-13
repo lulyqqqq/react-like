@@ -1,6 +1,6 @@
 // 封装柱状图
 import * as echarts from 'echarts';
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef} from "react";
 import './barChart.scss'
 
 // 1.功能代码抽象到这个组件中
