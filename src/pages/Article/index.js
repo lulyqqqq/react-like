@@ -41,6 +41,8 @@ const Article = () => {
              * data =>后端返回的状态status 根据它做条件渲染
              * data === 1 =>待审核
              * data === 2 =>审核通过
+             *
+             * render是一个用于自定义渲染表格列内容的函数
              */
             render: data => status[data]
         },
@@ -95,15 +97,53 @@ const Article = () => {
 
     // 获取文章列表
     const [list, setList] = useState([])
+
+    // 总数
+    const [count, setCount] = useState(0)
+    // 筛选功能
+    // 1.准备参数
+    const [reqData, setReqData] = useState({
+        status: '',
+        channel_id: '',
+        begin_pubdate: '',
+        end_pubdate: '',
+        page: 1,
+        per_page: 3
+    })
+
     useEffect(() => {
         async function getList() {
-            const res = await getArticleListApi()
+            const res = await getArticleListApi(reqData)
             setList(res.data.results)
+            setCount(res.data.total_count)
         }
 
         getList()
-    }, []);
+    }, [reqData]);
 
+
+    // 2. 获取当前筛选数据
+    const onFinish = (formData) => {
+        console.log(formData)
+        // 3. 把表单收集的数据放入请求参数中
+        setReqData({
+            ...reqData,
+            status: formData.status,
+            channel_id: formData.channel_id,
+            begin_pubdate: formData.date ? formData.date[0].format('YYYY-MM-DD'): null,
+            end_pubdate: formData.date ? formData.date[1].format('YYYY-MM-DD'): null
+        })
+        // 4.复用useEffect重新获取文章列表数据
+    }
+    // 分页
+    const onPageChang = (page) =>{
+        console.log(page)
+        // 修改参数依赖项,重新获取列表数据
+        setReqData({
+            ...reqData,
+            page
+        })
+    }
     return (
         <div className="article">
             <Card
@@ -114,13 +154,13 @@ const Article = () => {
                     ]}
                     />
                 }>
-                <Form initialValues={{status: ''}}>
+                <Form initialValues={{status: ''}} onFinish={onFinish}>
                     <Form.Item label="状态" name="status">
                         {/*单选框*/}
                         <Radio.Group>
                             <Radio value={''}>全部</Radio>
                             <Radio value={0}>草稿</Radio>
-                            <Radio value={1}>审核通过</Radio>
+                            <Radio value={2}>审核通过</Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item
@@ -145,8 +185,14 @@ const Article = () => {
             </Card>
 
             {/*表格筛选区域*/}
-            <Card style={{marginTop: 10}} title={`根据筛选条件查询到 ${list.length} 条数据`}>
-                <Table rowKey="id" columns={columns} dataSource={list}/>
+            <Card style={{marginTop: 10}} title={`根据筛选条件查询到 ${count} 条数据`}>
+                <Table rowKey="id"
+                       columns={columns}
+                       dataSource={list}
+                       pagination={{
+                            total: count,
+                            pageSize: reqData.per_page,
+                            onChange: onPageChang}}/>
             </Card>
 
         </div>
