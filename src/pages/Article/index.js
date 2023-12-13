@@ -1,11 +1,11 @@
 import {Link} from 'react-router-dom'
-import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space} from 'antd'
+import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space, Popconfirm, message} from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import {useChannel} from "@/hooks/useChannel";
 import {useEffect, useState} from "react";
-import {getArticleListApi} from "@/apis/articel";
+import {delArticleApi, getArticleListApi} from "@/apis/articel";
 
 const {Option} = Select
 const {RangePicker} = DatePicker
@@ -68,12 +68,21 @@ const Article = () => {
                 return (
                     <Space size="middle">
                         <Button type="primary" shape="circle" icon={<EditOutlined/>}/>
-                        <Button
-                            type="primary"
-                            danger
-                            shape="circle"
-                            icon={<DeleteOutlined/>}
-                        />
+                        <Popconfirm
+                            title="删除文章"
+                            description="确定删除文章吗?"
+                            onConfirm={()=>delConfirm(data)}
+                            onCancel={delCancel}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button
+                                type="primary"
+                                danger
+                                shape="circle"
+                                icon={<DeleteOutlined/>}
+                            />
+                        </Popconfirm>
                     </Space>
                 )
             }
@@ -130,13 +139,13 @@ const Article = () => {
             ...reqData,
             status: formData.status,
             channel_id: formData.channel_id,
-            begin_pubdate: formData.date ? formData.date[0].format('YYYY-MM-DD'): null,
-            end_pubdate: formData.date ? formData.date[1].format('YYYY-MM-DD'): null
+            begin_pubdate: formData.date ? formData.date[0].format('YYYY-MM-DD') : null,
+            end_pubdate: formData.date ? formData.date[1].format('YYYY-MM-DD') : null
         })
         // 4.复用useEffect重新获取文章列表数据
     }
     // 分页
-    const onPageChang = (page) =>{
+    const onPageChang = (page) => {
         console.log(page)
         // 修改参数依赖项,重新获取列表数据
         setReqData({
@@ -144,6 +153,21 @@ const Article = () => {
             page
         })
     }
+
+    const delConfirm = async (data) => {
+        console.log("点击确认删除",data);
+        // 注意:这里后端返回的数据不够清楚,不能通过接口调用是否成功来显示判断
+        await delArticleApi(data.id)
+        // 更新数据,触发重新获取列表请求
+        setReqData({
+            ...reqData
+        })
+        message.success("删除成功!")
+    };
+    const delCancel = (e) => {
+        console.log("点击取消",e);
+        message.error('取消删除');
+    };
     return (
         <div className="article">
             <Card
@@ -190,9 +214,10 @@ const Article = () => {
                        columns={columns}
                        dataSource={list}
                        pagination={{
-                            total: count,
-                            pageSize: reqData.per_page,
-                            onChange: onPageChang}}/>
+                           total: count,
+                           pageSize: reqData.per_page,
+                           onChange: onPageChang
+                       }}/>
             </Card>
 
         </div>

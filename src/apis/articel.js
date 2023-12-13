@@ -23,10 +23,18 @@ export function createArticleApi(data) {
 }
 
 // 3. 获得文章列表
-export function getArticleListApi(params){
+export function getArticleListApi(params) {
     return request({
         url: '/mp/articles',
         method: 'GET',
         params
+    })
+}
+
+// 4.删除文章
+export function delArticleApi(id) {
+    return request({
+        url: `/mp/articles/${id}`,
+        method: 'DELETE',
     })
 }

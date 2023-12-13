@@ -14,7 +14,7 @@ import 'react-quill/dist/quill.snow.css'
 import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
 import './index.scss'
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {createArticleApi} from "@/apis/articel";
 import {useChannel} from "@/hooks/useChannel";
 
@@ -22,10 +22,10 @@ const {Option} = Select
 const Publish = () => {
     // 获取频道列表
     const {channelList} = useChannel()
-
+    const formRef = useRef(null);
     //提交表单事项
     const onFinish = (formValue) => {
-        if (imageList.length !== imageType){
+        if (imageList.length !== imageType) {
             return message.error("封面类型和图片数量不匹配")
         }
         console.log(imageList)
@@ -46,11 +46,17 @@ const Publish = () => {
 
         // 2.调用接口
         createArticleApi(reqData)
+        // 重置表单字段的值
+        formRef.current.resetFields();
+        setImageList([])
+        //发布成功
+        message.success("发布成功!")
     }
 
+    // 同时控制
     const [imageList, setImageList] = useState([])
     const onUploadChange = (value) => {
-        console.log('正常上传中',value)
+        console.log('正常上传中', value)
         setImageList(value.fileList)
     }
     // 切换封面类型
@@ -74,6 +80,7 @@ const Publish = () => {
                     wrapperCol={{span: 16}}
                     initialValues={{type: 1}}
                     onFinish={onFinish}
+                    ref={formRef}
                 >
                     <Form.Item
                         label="标题"
@@ -109,7 +116,7 @@ const Publish = () => {
                         */}
                         {imageType > 0 &&
                             <Upload
-
+                                fileList={imageList}
                                 listType="picture-card"
                                 showUploadList
                                 name="image"
