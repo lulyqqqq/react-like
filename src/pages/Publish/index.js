@@ -170,8 +170,6 @@ const Publish = () => {
                             className="publish-quill"
                             theme="snow"
                             placeholder="请输入内容"
-                            // value={value}
-                            // onChange={handleChangeValue}
                         />
                     </Form.Item>
 
