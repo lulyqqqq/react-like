@@ -12,10 +12,10 @@ import {
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import {PlusOutlined} from '@ant-design/icons'
-import {Link, useSearchParams} from 'react-router-dom'
+import {Link, useNavigate, useSearchParams} from 'react-router-dom'
 import './index.scss'
 import {useEffect, useRef, useState} from "react";
-import {createArticleApi, getArticleById} from "@/apis/articel";
+import {createArticleApi, getArticleById, updateArticleApi} from "@/apis/articel";
 import {useChannel} from "@/hooks/useChannel";
 
 const {Option} = Select
@@ -23,12 +23,14 @@ const Publish = () => {
     // 获取频道列表
     const {channelList} = useChannel()
     const formRef = useRef(null);
+    const navigate = useNavigate();
     //提交表单事项
     const onFinish = (formValue) => {
         if (imageList.length !== imageType) {
             return message.error("封面类型和图片数量不匹配")
         }
         console.log(imageList)
+        // 获取form表单上的数据
         const {title, content, channel_id} = formValue
         // 获取表单数据
         console.log(formValue)
@@ -39,18 +41,39 @@ const Publish = () => {
             content,
             cover: {
                 type: imageType, // 封面模式
-                images: imageList.map(item => item.response.data.url),  // 封面列表
+                /**
+                 * 这里的url处理逻辑只是在新增时候的逻辑
+                 * 编辑图片的时候,重新上传图片从upload中获得的数据是由response返回的,需要做区分
+                 * 回显的时候,图片地址是直接存在url中的
+                 */
+                images: imageList.map(item => {
+                    if (item.response) {
+                        return item.response.data.url
+                    } else {
+                        return item.url
+                    }
+                }),  // 封面列表
             },
             channel_id
         }
 
-        // 2.调用接口
-        createArticleApi(reqData)
+        // 2.调用接口 调用不同的接口 存在文章Id ?编辑-编辑接口 : 新增-新增接口
+        if (articleId) {
+            updateArticleApi({
+                ...reqData,
+                id: articleId
+            })
+        } else {
+            createArticleApi(reqData)
+        }
+
         // 重置表单字段的值
         formRef.current.resetFields();
         setImageList([])
         //发布成功
         message.success("发布成功!")
+        // 发布修改完 跳转文章管理页
+        navigate("/article")
     }
 
     // 同时控制
@@ -69,6 +92,7 @@ const Publish = () => {
     const [searchParams] = useSearchParams();
     const articleId = searchParams.get("id")
 
+    // 回显数据,将数据重新放入form表单
     useEffect(() => {
         // 1.通过id获取数据
         async function getArticleDetail() {
@@ -94,6 +118,7 @@ const Publish = () => {
         }
 
     }, [articleId, form]);
+
     return (
         <div>
             <Card

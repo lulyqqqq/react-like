@@ -46,3 +46,13 @@ export function getArticleById(id){
         method: 'GET',
     })
 }
+
+// 2. 修改文章
+export function updateArticleApi(data) {
+    return request({
+        // draft=false:不是草稿
+        url: `/mp/articles/${data.id}?draft=false`,
+        method: 'PUT',
+        data
+    })
+}
